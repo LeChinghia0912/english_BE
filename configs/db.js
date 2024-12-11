@@ -1,11 +1,12 @@
 // config/db.js
 const mongoose = require("mongoose");
+require("dotenv").config();  // Thêm dòng này để tải file .env
 
 async function connect() {
   try {
     // Thay đổi URL để kết nối với MongoDB Atlas
-    const dbUri = "mongodb+srv://nghia3009:nghia3009@cluster0.1cshm.mongodb.net/";
-    await mongoose.connect(dbUri, {
+    const dbUri = process.env.MONGO_URI;
+        await mongoose.connect(dbUri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       serverSelectionTimeoutMS: 5000, // Thời gian chờ tối đa khi kết nối
