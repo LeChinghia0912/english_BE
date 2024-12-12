@@ -69,10 +69,14 @@ const handleSubmitLesson = async (req, res) => {
       }
     });
 
-    const lessonStatus = await LessonStatus.findOne({lesson_id: nextLesson._id});
-
-    if(lessonStatus) {
-      await LessonStatus.updateOne({_id: lessonStatus._id}, { isUnlocked: true }, { new: true });
+    if(nextLesson) {
+      const newLessonStatus = new LessonStatus({
+        user_id: id,
+        isUnlocked: true,
+        lesson_id: nextLesson._id,
+      });
+      
+      await newLessonStatus.save();
     }
 
     await saveUserAnswers(id, results, lesson_id);

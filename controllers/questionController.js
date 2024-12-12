@@ -11,7 +11,7 @@ const getQuestionsByChapterAndLesson = async (req, res) => {
 
     const lessonStatus = await Lesson.LessonStatus.findOne({lesson_id});
 
-    if(lessonStatus && !lessonStatus.isUnlocked) return res.status(401).json({ message: "Bài học chưa được mở" });
+    if(!lessonStatus) return res.status(401).json({ message: "Bài học chưa được mở" });
 
     // Tìm chapter theo slug
     const chapter = await Chapters.findOne({ slug: chapterSlug });
