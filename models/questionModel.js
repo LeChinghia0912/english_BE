@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const questionSchema = new mongoose.Schema(
   {
     label: { type: String, required: true }, // Câu hỏi
+    poster: { type: String, required: true }, // Câu hỏi
     mutiSelect: { type: Boolean, required: true }, // Có chọn nhiều không
     layer: { type: Number, required: true }, // Layer
     results: [{ type: String, required: true }], // Kết quả đúng

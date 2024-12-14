@@ -45,14 +45,14 @@ const getQuestionsByChapterAndLesson = async (req, res) => {
 };
 
 const createQuestion = async (req, res) => {
-  const { label, mutiSelect, layer, results, options, lesson_id } = req.body;
+  const { label, mutiSelect, layer, results, options, lesson_id, poster } = req.body;
 
   try {
     const existLessonId = await Lesson.Lessons.exists({_id: lesson_id})
 
     if(!existLessonId) return res.status(404).json({ message: "Bài học không tồn tại" });
 
-    const newQuestion = new Question({ label, mutiSelect, layer, results, options, lesson_id });
+    const newQuestion = new Question({ label, mutiSelect, layer, results, options, lesson_id, poster });
 
     await newQuestion.save();
 
