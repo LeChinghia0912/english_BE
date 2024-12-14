@@ -70,13 +70,14 @@ const handleSubmitLesson = async (req, res) => {
     });
 
     if(nextLesson) {
-      const newLessonStatus = new LessonStatus({
-        user_id: id,
-        isUnlocked: true,
-        lesson_id: nextLesson._id,
-      });
+      // const newLessonStatus = new LessonStatus({
+      //   user_id: id,
+      //   isUnlocked: true,
+      //   lesson_id: nextLesson._id,
+      // });
       
-      await newLessonStatus.save();
+      // await newLessonStatus.save();
+      await Lessons.findByIdAndUpdate({_id: nextLesson._id}, {isUnlocked: true}, { new: true });
     }
 
     await saveUserAnswers(id, results, lesson_id);
