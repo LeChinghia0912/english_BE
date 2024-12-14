@@ -7,7 +7,7 @@ const questionSchema = new mongoose.Schema(
     mutiSelect: { type: Boolean, required: true }, // Có chọn nhiều không
     layer: { type: Number, required: true }, // Layer
     results: [{ type: String, required: true }], // Kết quả đúng
-    child: [{ type: String, required: true }], // Các lựa chọn cho câu hỏi
+    options: [{ type: String, required: true }], // Các lựa chọn cho câu hỏi
     lesson_id: { type: mongoose.Schema.Types.ObjectId, ref: "Lesson" },
   },
   { timestamps: true }

@@ -69,15 +69,20 @@ const handleSubmitLesson = async (req, res) => {
       }
     });
 
-    if(nextLesson) {
-      // const newLessonStatus = new LessonStatus({
-      //   user_id: id,
-      //   isUnlocked: true,
-      //   lesson_id: nextLesson._id,
-      // });
-      
-      // await newLessonStatus.save();
-      await Lessons.findByIdAndUpdate({_id: nextLesson._id}, {isUnlocked: true}, { new: true });
+    if (nextLesson) {
+      const checkLesson = await LessonStatus.findById(nextLesson._id);
+
+      if (!checkLesson) {
+        const newLesson = new LessonStatus({
+          isUnlocked: true,
+          lesson_id: nextLesson._id,
+          user_id: id
+        })
+
+        await newLesson.save();
+      } else {
+        await LessonStatus.updateOne({_id: checkLesson._id}, { isUnlocked: true }, { new: true });
+      }
     }
 
     await saveUserAnswers(id, results, lesson_id);
