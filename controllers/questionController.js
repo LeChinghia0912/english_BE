@@ -1,17 +1,22 @@
 const Chapters = require("../models/chapterModel");
 const Lesson = require("../models/lessonModel");
 const Question = require("../models/questionModel");
+const User = require("../models/user");
 
 // Lấy danh sách câu hỏi theo chapter và lesson
 const getQuestionsByChapterAndLesson = async (req, res) => {
   try {
-    const { chapterSlug, lessonSlug } = req.params;
+    const {id} = req.user;
     const { lesson_id } = req.query;
-    console.log("🚀 ~ getQuestionsByChapterAndLesson ~ lesson_id:", lesson_id)
+    const { chapterSlug, lessonSlug } = req.params;
+
+    const user = await User.findById(id);
+
+    const roles = get(user, ["role"]);
 
     const lessonStatus = await Lesson.LessonStatus.findOne({lesson_id});
 
-    if(!lessonStatus) return res.status(401).json({ message: "Bài học chưa được mở" });
+    if(!lessonStatus && roles !== "admin") return res.status(401).json({ message: "Bài học chưa được mở" });
 
     // Tìm chapter theo slug
     const chapter = await Chapters.findOne({ slug: chapterSlug });
