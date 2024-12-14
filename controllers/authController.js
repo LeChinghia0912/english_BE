@@ -1,12 +1,12 @@
-const User = require("../models/user");
-const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
+const User = require("../models/user");
 const { paginateItems } = require("../utils/pagination");
-const { get } = require("lodash");
 
 // Đăng ký
 exports.register = async (req, res) => {
-  const { email, password, fullname } = req.body;
+  const { email, password, fullname, age, level, phone } = req.body;
 
   // Kiểm tra xem email đã tồn tại chưa
   const existingUser = await User.findOne({ email });
@@ -23,6 +23,9 @@ exports.register = async (req, res) => {
     email,
     password: hashedPassword,
     fullname,
+    age,
+    level,
+    phone,
   });
 
   // Lưu người dùng vào cơ sở dữ liệu
@@ -77,7 +80,7 @@ exports.login = async (req, res) => {
         id: user._id,
         fullname: user.fullname,
         email: user.email,
-        role: user.role
+        role: user.role,
       },
     });
   } catch (error) {
@@ -96,31 +99,37 @@ exports.refreshToken = async (req, res) => {
 
   try {
     // Kiểm tra tính hợp lệ của refresh token
-    jwt.verify(refresh_token, "your_refresh_token_secret", async (err, decoded) => {
-      if (err) {
-        return res.status(403).json({ message: "Refresh token không hợp lệ" });
+    jwt.verify(
+      refresh_token,
+      "your_refresh_token_secret",
+      async (err, decoded) => {
+        if (err) {
+          return res
+            .status(403)
+            .json({ message: "Refresh token không hợp lệ" });
+        }
+
+        // Tìm user từ refresh token
+        const user = await User.findById(decoded.id);
+        if (!user) {
+          return res.status(403).json({ message: "User không tồn tại" });
+        }
+
+        // Tạo lại access token mới
+        const new_access_token = jwt.sign(
+          { id: user._id },
+          "your_jwt_secret",
+          { expiresIn: "1h" } // Access token hết hạn sau 1 giờ
+        );
+
+        res.status(200).json({
+          message: "Cấp lại access token thành công",
+          tokens: {
+            access_token: new_access_token,
+          },
+        });
       }
-
-      // Tìm user từ refresh token
-      const user = await User.findById(decoded.id);
-      if (!user) {
-        return res.status(403).json({ message: "User không tồn tại" });
-      }
-
-      // Tạo lại access token mới
-      const new_access_token = jwt.sign(
-        { id: user._id },
-        "your_jwt_secret",
-        { expiresIn: "1h" } // Access token hết hạn sau 1 giờ
-      );
-
-      res.status(200).json({
-        message: "Cấp lại access token thành công",
-        tokens: {
-          access_token: new_access_token,
-        },
-      });
-    });
+    );
   } catch (error) {
     console.error("Lỗi khi refresh token:", error);
     res.status(500).json({ message: "Lỗi máy chủ", error });
@@ -135,7 +144,9 @@ exports.changePassword = async (req, res) => {
 
   // Kiểm tra đầu vào
   if (!currentPassword || !newPassword) {
-    return res.status(400).json({ message: "Please provide both current and new passwords." });
+    return res
+      .status(400)
+      .json({ message: "Please provide both current and new passwords." });
   }
 
   try {
@@ -149,39 +160,48 @@ exports.changePassword = async (req, res) => {
     // Kiểm tra mật khẩu hiện tại
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
-      return res.status(401).json({ message: "Current password is incorrect." });
+      return res
+        .status(401)
+        .json({ message: "Current password is incorrect." });
     }
 
     // Hash mật khẩu mới
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
 
-    const result = await User.findByIdAndUpdate({_id: id}, { password: hashedPassword}, { new: true });
-
-    // Cập nhật mật khẩu mới
-    // user.password = hashedPassword;
-    // await user.save();
-
-    res.status(200).json(result);
-  } catch (error) {
-    res.status(500).json({ message: "Có lỗi xảy ra", error: error.message });
-  }
-}
-
-exports.getAllUser = async(req, res) => {
-  const { page, limit } = req.query;
-
-  try {
-    const result = await paginateItems(
-      { },
-      page,
-      limit,
-      User
+    const result = await User.findByIdAndUpdate(
+      { _id: id },
+      { password: hashedPassword },
+      { new: true }
     );
 
     res.status(200).json(result);
   } catch (error) {
     res.status(500).json({ message: "Có lỗi xảy ra", error: error.message });
   }
+};
 
-} 
+exports.changeInfo = async (req, res) => {
+  const updatedData = req.body;
+  const { id } = req.user;
+
+  try {
+    const result = await Lessons.findByIdAndUpdate({_id: id}, updatedData, { new: true });
+
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ message: "Có lỗi xảy ra", error: error.message });
+  }
+};
+
+exports.getAllUser = async (req, res) => {
+  const { page, limit } = req.query;
+
+  try {
+    const result = await paginateItems({}, page, limit, User);
+
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ message: "Có lỗi xảy ra", error: error.message });
+  }
+};

@@ -14,7 +14,7 @@ const checkAndUpdateScore = async (userId, userResults) => {
 
       if (question) {
         // Kiểm tra nếu câu trả lời đúng
-        if (question.results.join(" ").toLocaleLowerCase() === results.join(" ").toLocaleLowerCase()) {
+        if (question.results.join(" ").toLocaleLowerCase()?.trim() === results.join(" ").toLocaleLowerCase()?.trim()) {
           score += 10; // Nếu đúng, cộng thêm 10 điểm
         }
       }

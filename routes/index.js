@@ -6,7 +6,7 @@ const authenticateToken = require("../middlewares/authMiddleware");
 const { createFeedback, getFeedbacks } = require("../controllers/feedbackController");
 const { getReport, createReport, deleteReport } = require("../controllers/reportController");
 const { updateQuestion, createQuestion, deleteQuestion } = require("../controllers/questionController");
-const { register, login, refreshToken, changePassword, getAllUser } = require("../controllers/authController");
+const { register, login, refreshToken, changePassword, getAllUser, changeInfo } = require("../controllers/authController");
 const { createChapter, deleteChapter, updateChapter, getChapterById } = require("../controllers/chapterController");
 const { handleSubmitLesson, deleteLesson, createLesson, updateLesson } = require("../controllers/lessonController");
 const { getChaptersByCategorySlug , getLessonsByChapterId, getQuestionsByChapterAndLesson } = require("../controllers");
@@ -39,6 +39,8 @@ router.post("/question/created", authenticateToken, checkAdminRole, createQuesti
 
 // patch
 router.patch("/auth/change-password", authenticateToken, changePassword);
+router.patch("/auth/change-info", authenticateToken, changeInfo);
+
 router.patch("/lesson/:lesson_id", authenticateToken, checkAdminRole, updateLesson);
 router.patch("/chapter/:chapter_id", authenticateToken, checkAdminRole, updateChapter);
 router.patch("/question/:question_id", authenticateToken, checkAdminRole, updateQuestion);
