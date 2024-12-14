@@ -90,7 +90,7 @@ const handleSubmitLesson = async (req, res) => {
 };
 
 const createLesson = async (req, res) => {
-  const { name, title, chapter_id } = req.body;
+  const { name, title, chapter_id, poster } = req.body;
   const user = req.user;
 
   try {
@@ -104,7 +104,7 @@ const createLesson = async (req, res) => {
     const match = getChapter.slug.match(/-(\d+)/); // Tìm số sau dấu '-'
 
     if (match) {
-      const newLesson = new Lessons({ name, title, slug: `${slug}-${match[1]}`, chapter_id });
+      const newLesson = new Lessons({ name, title, slug: `${slug}-${match[1]}`, chapter_id, poster });
 
       if(isArray(lessons) && lessons.length <= 0) {
         const newLessonStatus = new LessonStatus({user_id: user.id, lesson_id:newLesson._id, isUnlocked: true });
