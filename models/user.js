@@ -15,6 +15,21 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    
+    age: {
+      type: Number,
+      required: true,
+    },
+
+    level: {
+      type: String,
+      required: true,
+    },
+
+    phone: {
+      type: Number,
+      required: true,
+    },
     role: {
       type: String,
       enum: ["user", "admin"], // Chỉ cho phép "user" hoặc "admin"
