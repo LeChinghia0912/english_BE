@@ -70,24 +70,29 @@ const createChapter = async (req, res) => {
 };
 
 const updateChapter = async (req, res) => {
-  const updatedData = req.body;
   const { chapter_id } = req.params;
+  const updatedData = req.body;
 
   try {
-    if(!chapter_id) return res.status(400).json({ message: "Thiếu chapter_id" });
+    if (!chapter_id) return res.status(400).json({ message: "Thiếu chapter_id" });
 
-    const checkChapter = await Chapters.findOne({ slug: updatedData.slug });
+    const existingChapter = await Chapters.findOne({ slug: updatedData.slug });
+    if (existingChapter && existingChapter._id.toString() !== chapter_id)
+      return res.status(400).json({ message: "Slug đã được sử dụng" });
 
-    if(checkChapter) return res.status(400).json({ message: "Chương đã tồn tại" });
+    const updatedChapter = await Chapters.findByIdAndUpdate(
+      chapter_id,
+      updatedData,
+      { new: true, runValidators: true }
+    );
 
-    const result = await Chapters.findByIdAndUpdate({_id: chapter_id}, updatedData, { new: true });
-    
-    res.status(200).json(result);
+    if (!updatedChapter) return res.status(404).json({ message: "Không tìm thấy chapter" });
 
+    res.status(200).json({ message: "Cập nhật thành công", chapter: updatedChapter });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-}
+};
 
 const deleteChapter = async (req, res) => {
   const { id: chapterId } = req.body;
