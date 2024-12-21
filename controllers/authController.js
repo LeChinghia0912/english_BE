@@ -139,14 +139,25 @@ exports.refreshToken = async (req, res) => {
 // change password
 
 exports.changePassword = async (req, res) => {
-  const { currentPassword, newPassword } = req.body;
+  const { currentPassword, newPassword, confirmPassword } = req.body;
   const { id } = req.user;
 
   // Kiểm tra đầu vào
-  if (!currentPassword || !newPassword) {
+  if (!currentPassword || !newPassword || !confirmPassword) {
     return res
       .status(400)
-      .json({ message: "Please provide both current and new passwords." });
+      .json({ message: "Please provide both current password, new password, and confirm password." });
+  }
+
+  if (newPassword !== confirmPassword) {
+    return res.status(400).json({ message: "New password and confirm password do not match." });
+  }
+
+  // Kiểm tra độ dài mật khẩu mới (Ví dụ: ít nhất 8 ký tự)
+  if (newPassword.length < 8) {
+    return res
+      .status(400)
+      .json({ message: "New password must be at least 8 characters long." });
   }
 
   try {
@@ -169,15 +180,17 @@ exports.changePassword = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
 
+    // Cập nhật mật khẩu mới vào cơ sở dữ liệu
     const result = await User.findByIdAndUpdate(
       { _id: id },
       { password: hashedPassword },
       { new: true }
     );
 
-    res.status(200).json(result);
+    res.status(200).json({ message: "Password changed successfully." });
   } catch (error) {
-    res.status(500).json({ message: "Có lỗi xảy ra", error: error.message });
+    console.error(error);
+    res.status(500).json({ message: "An error occurred while changing the password.", error: error.message });
   }
 };
 
