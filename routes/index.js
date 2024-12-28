@@ -51,6 +51,6 @@ router.delete("/report/deleted", authenticateToken, checkAdminRole, deleteReport
 router.delete("/lesson/deleted", authenticateToken, checkAdminRole, deleteLesson);
 router.delete("/chapter/deleted", authenticateToken, checkAdminRole, deleteChapter);
 router.delete("/question/deleted", authenticateToken, checkAdminRole, deleteQuestion);
-router.delete("/auth/delete", authenticateToken, checkAdminRole, deleteUser);
+router.delete("/auth/deleted", authenticateToken, checkAdminRole, deleteUser);
 
 module.exports = router;
