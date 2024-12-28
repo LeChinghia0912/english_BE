@@ -199,7 +199,7 @@ exports.changeInfo = async (req, res) => {
   const { id } = req.user;
 
   try {
-    const result = await Lessons.findByIdAndUpdate({_id: id}, updatedData, { new: true });
+    const result = await User.findByIdAndUpdate({_id: id}, updatedData, { new: true });
 
     res.status(200).json(result);
   } catch (error) {
