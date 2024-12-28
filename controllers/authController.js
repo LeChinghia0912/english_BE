@@ -199,7 +199,11 @@ exports.changeInfo = async (req, res) => {
   const { id } = req.user;
 
   try {
-    const result = await User.findByIdAndUpdate({_id: id}, updatedData, { new: true });
+    const checkUserId = await User.findById(id);
+
+    if(!checkUserId) return res.status(401).json("User không tồn tại");
+
+    const result = await User.updateOne({_id: id}, updatedData);
 
     res.status(200).json(result);
   } catch (error) {
