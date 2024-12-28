@@ -6,7 +6,7 @@ const authenticateToken = require("../middlewares/authMiddleware");
 const { createFeedback, getFeedbacks } = require("../controllers/feedbackController");
 const { getReport, createReport, deleteReport } = require("../controllers/reportController");
 const { updateQuestion, createQuestion, deleteQuestion } = require("../controllers/questionController");
-const { register, login, refreshToken, changePassword, getAllUser, changeInfo } = require("../controllers/authController");
+const { register, login, refreshToken, changePassword, getAllUser, changeInfo, getUserById } = require("../controllers/authController");
 const { createChapter, deleteChapter, updateChapter, getChapterById } = require("../controllers/chapterController");
 const { handleSubmitLesson, deleteLesson, createLesson, updateLesson } = require("../controllers/lessonController");
 const { getChaptersByCategorySlug , getLessonsByChapterId, getQuestionsByChapterAndLesson } = require("../controllers");
@@ -22,6 +22,7 @@ router.get("/feedbacks", getFeedbacks);
 router.get("/users", authenticateToken, checkAdminRole, getAllUser);
 router.get("/chapters", authenticateToken, getChaptersByCategorySlug );
 router.get("/:chapterSlug", authenticateToken, getLessonsByChapterId);
+router.get("/auth/users/:id", authenticateToken, checkAdminRole, getUserById);
 router.get("/chapter/:id", authenticateToken, checkAdminRole, getChapterById );
 router.get("/:chapterSlug/:lessonSlug", authenticateToken, getQuestionsByChapterAndLesson);
 

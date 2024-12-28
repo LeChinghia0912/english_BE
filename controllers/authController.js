@@ -218,3 +218,17 @@ exports.getAllUser = async (req, res) => {
     res.status(500).json({ message: "Có lỗi xảy ra", error: error.message });
   }
 };
+
+exports.getUserById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    if (!id) return res.status(400).json({ message: "Thiếu user id" });
+
+    const result = await User.findById(id);
+
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
