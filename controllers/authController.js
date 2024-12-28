@@ -240,7 +240,7 @@ exports.getUserById = async (req, res) => {
 };
 
 exports.deleteUser = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.body;
 
   try {
     if (!id) return res.status(400).json({ message: "Thiếu user id" });
