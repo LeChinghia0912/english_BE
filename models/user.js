@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
-      unique: true, // Đảm bảo email là duy nhất
+      // unique: true,
     },
     password: {
       type: String,
