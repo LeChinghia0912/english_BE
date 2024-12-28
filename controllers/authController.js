@@ -203,7 +203,7 @@ exports.changeInfo = async (req, res) => {
 
     if(!checkUserId) return res.status(401).json("User không tồn tại");
 
-    const result = await User.updateOne({_id: id}, updatedData);
+    const result = await User.findByIdAndUpdate({_id: id}, updatedData, { new: true });
 
     res.status(200).json(result);
   } catch (error) {
