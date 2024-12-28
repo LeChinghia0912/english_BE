@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../models/user");
 const { paginateItems } = require("../utils/pagination");
+const { userLessonResult, LessonStatus } = require("../models/lessonModel");
 
 // Đăng ký
 exports.register = async (req, res) => {
@@ -233,6 +234,22 @@ exports.getUserById = async (req, res) => {
     const result = await User.findById(id);
 
     res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    if (!id) return res.status(400).json({ message: "Thiếu user id" });
+
+    await User.findByIdAndDelete(id);
+    await userLessonResult.deleteMany({ user_id: { $in: id } });
+    await LessonStatus.deleteMany({user_id: {$in: id}});
+
+    res.status(200).json("Xóa người dùng thành công");
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

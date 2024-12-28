@@ -6,7 +6,7 @@ const authenticateToken = require("../middlewares/authMiddleware");
 const { createFeedback, getFeedbacks } = require("../controllers/feedbackController");
 const { getReport, createReport, deleteReport } = require("../controllers/reportController");
 const { updateQuestion, createQuestion, deleteQuestion } = require("../controllers/questionController");
-const { register, login, refreshToken, changePassword, getAllUser, changeInfo, getUserById } = require("../controllers/authController");
+const { register, login, refreshToken, changePassword, getAllUser, changeInfo, getUserById, deleteUser } = require("../controllers/authController");
 const { createChapter, deleteChapter, updateChapter, getChapterById } = require("../controllers/chapterController");
 const { handleSubmitLesson, deleteLesson, createLesson, updateLesson } = require("../controllers/lessonController");
 const { getChaptersByCategorySlug , getLessonsByChapterId, getQuestionsByChapterAndLesson } = require("../controllers");
@@ -51,5 +51,6 @@ router.delete("/report/deleted", authenticateToken, checkAdminRole, deleteReport
 router.delete("/lesson/deleted", authenticateToken, checkAdminRole, deleteLesson);
 router.delete("/chapter/deleted", authenticateToken, checkAdminRole, deleteChapter);
 router.delete("/question/deleted", authenticateToken, checkAdminRole, deleteQuestion);
+router.delete("/auth/delete", authenticateToken, checkAdminRole, deleteUser);
 
 module.exports = router;
