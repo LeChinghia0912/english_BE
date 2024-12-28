@@ -196,14 +196,15 @@ exports.changePassword = async (req, res) => {
 
 exports.changeInfo = async (req, res) => {
   const updatedData = req.body;
-  const { id } = req.user;
+  
+  const { id, ...restProps } = updatedData
 
   try {
     const checkUserId = await User.findById(id);
 
     if(!checkUserId) return res.status(401).json("User không tồn tại");
 
-    const result = await User.findByIdAndUpdate({_id: id}, updatedData, { new: true });
+    const result = await User.findByIdAndUpdate({_id: id}, {...restProps}, { new: true });
 
     res.status(200).json(result);
   } catch (error) {
