@@ -81,7 +81,7 @@ const uploadFile = async (req, res) => {
   const { file } = req.body;
   console.log(file)
   try {
-    cloudinary.uploader.upload_large(file, {
+    cloudinary.uploader.upload_large("https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg", {
       chunk_size: 7000000
     }, (error, result) => {console.log(error)});
 
