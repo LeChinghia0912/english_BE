@@ -81,7 +81,7 @@ const uploadFile = async (req, res) => {
   const { file } = req.body;
   console.log(file)
   try {
-    const res = await cloudinary.url("https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg", {width: 100, height: 150, crop: "fill", fetch_format: "auto"})
+    const res = cloudinary.url("https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg", {width: 100, height: 150, crop: "fill", fetch_format: "auto"})
 
     // Thông tin file được upload
 
