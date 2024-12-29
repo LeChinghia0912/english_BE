@@ -79,13 +79,15 @@ const createChapter = async (req, res) => {
 
 const uploadFile = async (req, res) => {
   const { file } = req.body;
-  console.log(file)
   try {
     const res = cloudinary.url("https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg", {width: 100, height: 150, crop: "fill", fetch_format: "auto"})
+    console.log(res)
 
     // Thông tin file được upload
 
-    res.status(200).json(res);
+    res.status(200).json({
+      message: "thành công"
+    });
   } catch (error) {
     res.status(500).json({
       message: "Lỗi upload file",
