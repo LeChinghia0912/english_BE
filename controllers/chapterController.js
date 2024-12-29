@@ -87,7 +87,7 @@ const uploadFile = async (req, res) => {
 
     // Upload file lên Cloudinary
     const result = await cloudinary.uploader.upload(file.path, {
-      folder: "app_english", // Tên thư mục trên Cloudinary
+      folder: "BANK", // Tên thư mục trên Cloudinary
       width: 100,
       height: 150,
       crop: "fill",
