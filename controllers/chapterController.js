@@ -2,13 +2,13 @@ const Chapters = require("../models/chapterModel");
 const { paginateItems } = require("../utils/pagination");
 const { Lessons, userLessonResult } = require("../models/lessonModel");
 const Question = require("../models/questionModel");
-const cloudinary = require("cloudinary").v2;
+// const cloudinary = require("cloudinary").v2;
 
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME, 
-  api_key: process.env.CLOUD_API_KEY, 
-  api_secret: process.env.CLOUD_API_SECRET,
-});
+// cloudinary.config({
+//   cloud_name: process.env.CLOUD_NAME, 
+//   api_key: process.env.CLOUD_API_KEY, 
+//   api_secret: process.env.CLOUD_API_SECRET,
+// });
 
 // Lấy tất cả các chương học theo Course ID
 const getChaptersByCategorySlug = async (req, res) => {
@@ -152,5 +152,5 @@ module.exports = {
   deleteChapter,
   updateChapter,
   getChapterById,
-  uploadFile,
+  // uploadFile,
 };
