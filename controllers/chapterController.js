@@ -4,6 +4,12 @@ const { Lessons, userLessonResult } = require("../models/lessonModel");
 const Question = require("../models/questionModel");
 const cloudinary = require("cloudinary").v2;
 
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME, 
+  api_key: process.env.CLOUD_API_KEY, 
+  api_secret: process.env.CLOUD_API_SECRET,
+});
+
 // Lấy tất cả các chương học theo Course ID
 const getChaptersByCategorySlug = async (req, res) => {
   try {
@@ -75,7 +81,7 @@ const uploadFile = async (req, res) => {
   const { file } = req.body;
   console.log(file)
   try {
-    cloudinary.v2.uploader.upload_large(file, {
+    cloudinary.uploader.upload_large(file, {
       chunk_size: 7000000
     }, (error, result) => {console.log(error)});
 
