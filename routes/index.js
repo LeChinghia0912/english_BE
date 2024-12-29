@@ -40,7 +40,7 @@ router.post("/chapters/created", authenticateToken, checkAdminRole, createChapte
 router.post("/question/created", authenticateToken, checkAdminRole, createQuestion);
 
 // text
-router.post("/file/upload", authenticateToken, checkAdminRole, upload.single("file"), uploadFile);
+router.post("/file/upload", authenticateToken, checkAdminRole, upload.single("gamefile"), uploadFile);
 
 // patch
 router.patch("/auth/change-password", authenticateToken, changePassword);

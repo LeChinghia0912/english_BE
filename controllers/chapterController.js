@@ -77,7 +77,7 @@ const uploadFile = async (req, res) => {
     const { file } = req.body;
     res.status(200).json({
       message: "Upload thành công!",
-      fileUrl: file.path, // URL của file trên Cloudinary
+      fileUrl: file, // URL của file trên Cloudinary
     });
   } catch (error) {
     res.status(500).json({
