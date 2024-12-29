@@ -2,6 +2,7 @@ const Chapters = require("../models/chapterModel");
 const { paginateItems } = require("../utils/pagination");
 const { Lessons, userLessonResult } = require("../models/lessonModel");
 const Question = require("../models/questionModel");
+const cloudinary = require("cloudinary").v2;
 
 // Lấy tất cả các chương học theo Course ID
 const getChaptersByCategorySlug = async (req, res) => {
@@ -19,13 +20,7 @@ const getChaptersByCategorySlug = async (req, res) => {
       filter.slug = { $ne: "chuong-999" }; // Lấy tất cả trừ slug: chuong-999
     }
 
-    const result = await paginateItems(
-      filter,
-      page,
-      limit,
-      Chapters,
-      search
-    );
+    const result = await paginateItems(filter, page, limit, Chapters, search);
 
     res.status(200).json(result);
   } catch (error) {
@@ -40,24 +35,31 @@ const getChapterById = async (req, res) => {
     if (!id) return res.status(400).json({ message: "Thiếu chapter id" });
 
     const result = await Chapters.findById(id);
-    
+
     res.status(200).json(result);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-}
+};
 
 const createChapter = async (req, res) => {
   const { name, title, poster } = req.body;
 
   try {
-    if (!name || !title || !poster) throw new Error("Dữ liệu không hợp lệ, cần phải có 2 trường name và title");
+    if (!name || !title || !poster)
+      throw new Error(
+        "Dữ liệu không hợp lệ, cần phải có 2 trường name và title"
+      );
 
-    const slug = name.replaceAll(" ", "-").toLowerCase().replace(/chương/g, "chuong");
+    const slug = name
+      .replaceAll(" ", "-")
+      .toLowerCase()
+      .replace(/chương/g, "chuong");
 
     const checkChapter = await Chapters.findOne({ slug });
 
-    if(checkChapter) return res.status(400).json({ message: "Chương đã tồn tại" });
+    if (checkChapter)
+      return res.status(400).json({ message: "Chương đã tồn tại" });
 
     const newChapters = new Chapters({ name, title, slug, poster });
 
@@ -69,31 +71,53 @@ const createChapter = async (req, res) => {
   }
 };
 
+const uploadFile = async (req, res) => {
+  try {
+    // Thông tin file được upload
+    const { file } = req.body;
+    res.status(200).json({
+      message: "Upload thành công!",
+      fileUrl: file.path, // URL của file trên Cloudinary
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Lỗi upload file",
+      error: error.message,
+    });
+  }
+};
+
 const updateChapter = async (req, res) => {
   const updatedData = req.body;
   const { chapter_id } = req.params;
 
   try {
-    if(!chapter_id) return res.status(400).json({ message: "Thiếu chapter_id" });
+    if (!chapter_id)
+      return res.status(400).json({ message: "Thiếu chapter_id" });
 
     const checkChapter = await Chapters.findOne({ slug: updatedData.slug });
 
-    if(checkChapter) return res.status(400).json({ message: "Chương đã tồn tại" });
+    if (checkChapter)
+      return res.status(400).json({ message: "Chương đã tồn tại" });
 
-    const result = await Chapters.findByIdAndUpdate({_id: chapter_id}, updatedData, { new: true });
-    
+    const result = await Chapters.findByIdAndUpdate(
+      { _id: chapter_id },
+      updatedData,
+      { new: true }
+    );
+
     res.status(200).json(result);
-
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-}
+};
 
 const deleteChapter = async (req, res) => {
   const { id: chapterId } = req.body;
 
   try {
-    if(!chapterId) return res.status(400).json({ error: "id không được để trống" });
+    if (!chapterId)
+      return res.status(400).json({ error: "id không được để trống" });
 
     const lessons = await Lessons.find({ chapter_id: chapterId });
     const lessonIds = lessons.map((lesson) => lesson._id);
@@ -113,4 +137,11 @@ const deleteChapter = async (req, res) => {
   }
 };
 
-module.exports = { getChaptersByCategorySlug, createChapter, deleteChapter, updateChapter, getChapterById };
+module.exports = {
+  getChaptersByCategorySlug,
+  createChapter,
+  deleteChapter,
+  updateChapter,
+  getChapterById,
+  uploadFile,
+};

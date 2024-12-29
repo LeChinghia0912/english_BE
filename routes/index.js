@@ -7,9 +7,10 @@ const { createFeedback, getFeedbacks } = require("../controllers/feedbackControl
 const { getReport, createReport, deleteReport } = require("../controllers/reportController");
 const { updateQuestion, createQuestion, deleteQuestion } = require("../controllers/questionController");
 const { register, login, refreshToken, changePassword, getAllUser, changeInfo, getUserById, deleteUser } = require("../controllers/authController");
-const { createChapter, deleteChapter, updateChapter, getChapterById } = require("../controllers/chapterController");
+const { createChapter, deleteChapter, updateChapter, getChapterById, uploadFile } = require("../controllers/chapterController");
 const { handleSubmitLesson, deleteLesson, createLesson, updateLesson } = require("../controllers/lessonController");
 const { getChaptersByCategorySlug , getLessonsByChapterId, getQuestionsByChapterAndLesson } = require("../controllers");
+const upload = require("../middlewares/multer");
 
 const router = express.Router();
 
@@ -37,6 +38,9 @@ router.post("/lesson/submit", authenticateToken, handleSubmitLesson);
 router.post("/lesson/created", authenticateToken, checkAdminRole, createLesson);
 router.post("/chapters/created", authenticateToken, checkAdminRole, createChapter);
 router.post("/question/created", authenticateToken, checkAdminRole, createQuestion);
+
+// text
+router.post("/file/upload", authenticateToken, checkAdminRole, upload.single("file"), uploadFile);
 
 // patch
 router.patch("/auth/change-password", authenticateToken, changePassword);
