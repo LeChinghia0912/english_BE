@@ -80,7 +80,7 @@ const createChapter = async (req, res) => {
 const uploadFile = async (req, res) => {
   const { file } = req.body;
   try {
-    const res = cloudinary.url("https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg", {width: 100, height: 150, crop: "fill", fetch_format: "auto"})
+    const res = await cloudinary.uploader.upload("https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg", {width: 100, height: 150, crop: "fill", fetch_format: "auto"})
     console.log(res)
 
     // Thông tin file được upload
