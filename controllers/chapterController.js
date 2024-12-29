@@ -75,6 +75,8 @@ const uploadFile = async (req, res) => {
   try {
     // Thông tin file được upload
     const { file } = req.body;
+    console.log(file)
+
     res.status(200).json({
       message: "Upload thành công!",
       fileUrl: file, // URL của file trên Cloudinary
