@@ -78,23 +78,38 @@ const createChapter = async (req, res) => {
 };
 
 const uploadFile = async (req, res) => {
-  const { file } = req.body;
   try {
-    const res = await cloudinary.uploader.upload("https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg", {width: 100, height: 150, crop: "fill", fetch_format: "auto"})
-    console.log(res)
+    // Lấy file từ Multer (req.file do middleware upload.single() xử lý)
+    const file = req.file;
+    if (!file) {
+      return res.status(400).json({ message: "Vui lòng tải lên file" });
+    }
 
-    // Thông tin file được upload
+    // Upload file lên Cloudinary
+    const result = await cloudinary.uploader.upload(file.path, {
+      folder: "app_english", // Tên thư mục trên Cloudinary
+      width: 100,
+      height: 150,
+      crop: "fill",
+      fetch_format: "auto",
+    });
 
+    console.log("File uploaded:", result);
+
+    // Trả về thông tin file đã upload
     res.status(200).json({
-      message: "thành công"
+      message: "Tải lên thành công",
+      data: result,
     });
   } catch (error) {
+    console.error("Lỗi upload:", error);
     res.status(500).json({
       message: "Lỗi upload file",
       error: error.message,
     });
   }
 };
+
 
 const updateChapter = async (req, res) => {
   const updatedData = req.body;
