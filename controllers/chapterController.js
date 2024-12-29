@@ -72,10 +72,14 @@ const createChapter = async (req, res) => {
 };
 
 const uploadFile = async (req, res) => {
+  const { file } = req.body;
+  console.log(file)
   try {
+    cloudinary.v2.uploader.upload_large(file, {
+      chunk_size: 7000000
+    }, (error, result) => {console.log(error)});
+
     // Thông tin file được upload
-    const { file } = req.body;
-    console.log(file)
 
     res.status(200).json({
       message: "Upload thành công!",
