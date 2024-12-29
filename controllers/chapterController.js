@@ -73,22 +73,11 @@ const createChapter = async (req, res) => {
 
 const uploadFile = async (req, res) => {
   try {
+    // Thông tin file được upload
     const { file } = req.body;
-
-    if (!file) {
-      return res.status(400).json({
-        message: "Không có file để upload",
-      });
-    }
-
-    // Upload file lên Cloudinary
-    const uploadedFile = await cloudinary.uploader.upload(file, {
-      folder: "uploads", // Thư mục upload
-    });
-
     res.status(200).json({
       message: "Upload thành công!",
-      fileUrl: uploadedFile.secure_url, // Trả về URL của file đã upload
+      fileUrl: file, // URL của file trên Cloudinary
     });
   } catch (error) {
     res.status(500).json({
