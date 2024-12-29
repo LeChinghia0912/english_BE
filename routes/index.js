@@ -10,7 +10,7 @@ const { register, login, refreshToken, changePassword, getAllUser, changeInfo, g
 const { createChapter, deleteChapter, updateChapter, getChapterById, uploadFile } = require("../controllers/chapterController");
 const { handleSubmitLesson, deleteLesson, createLesson, updateLesson } = require("../controllers/lessonController");
 const { getChaptersByCategorySlug , getLessonsByChapterId, getQuestionsByChapterAndLesson } = require("../controllers");
-const upload = require("../middlewares/multer");
+// const upload = require("../middlewares/multer");
 
 const router = express.Router();
 
@@ -40,7 +40,7 @@ router.post("/chapters/created", authenticateToken, checkAdminRole, createChapte
 router.post("/question/created", authenticateToken, checkAdminRole, createQuestion);
 
 // text
-router.post("/file/upload", authenticateToken, checkAdminRole, uploadFile);
+// router.post("/file/upload", authenticateToken, checkAdminRole, uploadFile);
 
 // patch
 router.patch("/auth/change-password", authenticateToken, changePassword);
