@@ -81,14 +81,11 @@ const uploadFile = async (req, res) => {
   const { file } = req.body;
   console.log(file)
   try {
-    cloudinary.url("https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg", {width: 100, height: 150, crop: "fill", fetch_format: "auto"})
+    const res = await cloudinary.url("https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg", {width: 100, height: 150, crop: "fill", fetch_format: "auto"})
 
     // Thông tin file được upload
 
-    res.status(200).json({
-      message: "Upload thành công!",
-      fileUrl: file, // URL của file trên Cloudinary
-    });
+    res.status(200).json(res);
   } catch (error) {
     res.status(500).json({
       message: "Lỗi upload file",
