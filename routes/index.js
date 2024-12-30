@@ -7,7 +7,7 @@ const { createFeedback, getFeedbacks } = require("../controllers/feedbackControl
 const { getReport, createReport, deleteReport } = require("../controllers/reportController");
 const { updateQuestion, createQuestion, deleteQuestion } = require("../controllers/questionController");
 const { register, login, refreshToken, changePassword, getAllUser, changeInfo, getUserById, deleteUser } = require("../controllers/authController");
-const { createChapter, deleteChapter, updateChapter, getChapterById } = require("../controllers/chapterController");
+const { createChapter, deleteChapter, updateChapter, getChapterById, countChapter } = require("../controllers/chapterController");
 const { handleSubmitLesson, deleteLesson, createLesson, updateLesson } = require("../controllers/lessonController");
 const { getChaptersByCategorySlug , getLessonsByChapterId, getQuestionsByChapterAndLesson } = require("../controllers");
 
@@ -25,6 +25,7 @@ router.get("/:chapterSlug", authenticateToken, getLessonsByChapterId);
 router.get("/auth/users/:id", authenticateToken, checkAdminRole, getUserById);
 router.get("/chapter/:id", authenticateToken, checkAdminRole, getChapterById );
 router.get("/:chapterSlug/:lessonSlug", authenticateToken, getQuestionsByChapterAndLesson);
+router.get("/chapters-count", authenticateToken, countChapter);
 
 // API POST
 router.post("/auth/login", login);
