@@ -129,20 +129,48 @@ const createLesson = async (req, res) => {
   }
 };
 
+// const updateLesson = async (req, res) => {
+//   const updatedData = req.body;
+//   const { lesson_id } = req.params;
+
+//   try {
+//     if(!lesson_id) return res.status(400).json({ message: "Thiếu lesson_id" });
+
+//     const result = await Lessons.findByIdAndUpdate({_id: lesson_id}, updatedData, { new: true });
+
+//     res.status(200).json(result);
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// }
+
 const updateLesson = async (req, res) => {
-  const updatedData = req.body;
-  const { lesson_id } = req.params;
+  const updatedData = req.body; 
+  const { lesson_id } = req.params; 
 
   try {
-    if(!lesson_id) return res.status(400).json({ message: "Thiếu lesson_id" });
+    if (!lesson_id)
+      return res.status(400).json({ message: "Thiếu lesson_id" }); 
 
-    const result = await Lessons.findByIdAndUpdate({_id: lesson_id}, updatedData, { new: true });
+    const checkLesson = await Lessons.findOne({ slug: updatedData.slug });
 
+    if (checkLesson)
+      return res.status(400).json({ message: "Bài học đã tồn tại" }); 
+
+    const result = await Chapters.findByIdAndUpdate(
+      { _id: lesson_id }, 
+      updatedData, 
+      { new: true } 
+    );
+
+    // Trả kết quả về client
     res.status(200).json(result);
   } catch (error) {
+    // Xử lý lỗi nếu có
     res.status(500).json({ message: error.message });
   }
-}
+};
+
 
 const deleteLesson = async (req, res) => {
   const { id: lessonId } = req.body;
