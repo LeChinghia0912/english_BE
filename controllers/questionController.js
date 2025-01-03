@@ -69,7 +69,7 @@ const updateQuestion = async (req, res) => {
   try {
     if(!question_id) return res.status(400).json({ message: "Thiếu question_id" }); 
 
-    await Question.findByIdAndUpdate({_id: question_id}, updatedData, { new: true });
+    const result = await Question.findByIdAndUpdate({_id: question_id}, updatedData, { new: true });
 
     res.status(200).json(result);
   } catch (error) {
